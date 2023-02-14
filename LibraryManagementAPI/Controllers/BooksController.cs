@@ -55,6 +55,15 @@ namespace LibraryManagementAPI.Controllers
         {
             return _booksRepository.FindBooksMultipleSearchCriteria(searchText);
         }
+
+
+        [HttpGet(Name = "LocateSampleBookByISBN")]
+        public LibraryInventory LocateSampleBookByISBN(string isbn)
+        {
+            return _booksRepository.LocateSampleBookByISBN(isbn);
+        }
+
+        
     }
 }
 

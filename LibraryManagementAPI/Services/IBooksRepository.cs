@@ -14,6 +14,8 @@ namespace LibraryManagementAPI.Services
 
         List<Book> FindBooksMultipleSearchCriteria(string searchString);
 
+        LibraryInventory LocateSampleBookByISBN(string isbn);
+
 
     }
 }

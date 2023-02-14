@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Identity;
 
 namespace LibraryManagementAPI.SampleData
 {
-	public static class DataInitializer
-	{
+    public static class DataInitializer
+    {
 
         public static List<Book> lstBooksSample = new List<Book>
             {
@@ -32,12 +32,53 @@ namespace LibraryManagementAPI.SampleData
 
             };
 
+        public static List<Book> lstSampleInventoryBooks = new List<Book>
+            {
+                new Book
+                {
+                    Authors = new List<string> {"Jack Williams"},
+                    ISBN = "234-3465-2344",
+                    Title = "Call of the Forest",
+                    Publisher = "Times",
+                    PublicationYear = 2019,
+                    NumberOfPages = 200
+                },
+                new Book
+                {
+                    Authors = new List<string> { "Mark Peterson", "James Mathew" },
+                    ISBN = "4564-345-2646",
+                    Title = "A Spell too Far",
+                    Publisher = "Square",
+                    PublicationYear = 1990,
+                    NumberOfPages = 100
 
+                }
 
-        internal static void Seed( RepositoryContext ctx)
+            };
+
+        public static List<LibraryInventory> library = new List<LibraryInventory>()
+        {
+            new LibraryInventory
+            {
+                Books = lstBooksSample,
+                Room = 1,
+                Row= 1,
+                BookShelf = 1
+            },
+            new LibraryInventory
+            {
+                Books = lstSampleInventoryBooks,
+                Room = 1,
+                Row= 1,
+                BookShelf = 2
+            }
+
+        };
+
+        internal static void Seed(RepositoryContext ctx)
         {
             ctx.Database.EnsureCreated();
-           
+
 
             if (!ctx.Books.Any())
             {

@@ -15,7 +15,7 @@ namespace LibraryManagementAPI.Services
 {
     public class BooksRepository : IRepositoryBase<Book>, IBooksRepository
     {
-        RepositoryContext _repositoryContext; 
+        RepositoryContext _repositoryContext;
 
         public BooksRepository()
         {
@@ -24,7 +24,7 @@ namespace LibraryManagementAPI.Services
 
         public BooksRepository(RepositoryContext repositoryContext) //: base(repositoryContext)
         {
-            _repositoryContext =  repositoryContext;
+            _repositoryContext = repositoryContext;
         }
 
         public void Create(Book entity)
@@ -66,29 +66,26 @@ namespace LibraryManagementAPI.Services
         public List<Book> FindBooks(string searchString)
         {
             var searchResults = LibraryManagementAPI.SampleData.DataInitializer.lstBooksSample
-                .Where(a => a.Authors.Any(a=>a == searchString) || a.Title.Contains(searchString) ||
-                a.Publisher.Contains(searchString) || Convert.ToString( a.PublicationYear).Contains(searchString));
+                .Where(a => a.Authors.Any(a => a == searchString) || a.Title.Contains(searchString) ||
+                a.Publisher.Contains(searchString) || Convert.ToString(a.PublicationYear).Contains(searchString));
 
             return searchResults.ToList();
         }
 
         public List<Book> FindBooksMultipleSearchCriteria(string searchString)
         {
-            var searchMultipleStrings= searchString?.Split("&").ToList();
+            var searchMultipleStrings = searchString?.Split("&").ToList();
 
-            var searchResults =  LibraryManagementAPI.SampleData.DataInitializer.lstBooksSample.All(A => searchMultipleStrings.Any(b => A.Authors.Contains(b) || A.Title.Contains(b)
-            || A.PublicationYear.Equals(b) || A.Publisher.Contains(b)));
+            var searchResults = LibraryManagementAPI.SampleData.DataInitializer.lstBooksSample.All(A => searchMultipleStrings.Any(b => A.Authors.Contains(b) || A.Title.Contains(b)
+            || Convert.ToString(A.PublicationYear).Contains(searchString) || A.Publisher.Contains(b)));
 
             var results = (from book in lstBooksSample
-                           where searchMultipleStrings.Equals( book.Publisher) ||
-                           searchMultipleStrings.Equals(book.PublicationYear) ||
-                           searchMultipleStrings.Equals(book.Title) ||
-                           searchMultipleStrings.Equals(book.Authors.Any())
+                           where searchMultipleStrings.Contains(book.Publisher) ||
+                           searchMultipleStrings.Contains(book.PublicationYear.ToString()) ||
+                           searchMultipleStrings.Contains(book.Title) //||
+                           //book.Authors.Any(a=>a == searchMultipleStrings)
                            select book).ToList();
 
-            //var searchResults = LibraryManagementAPI.SampleData.DataInitializer.lstBooksSample
-            //    .Where(a => a.Authors.Contains(searchString) || a.Title.Contains(searchString) ||
-            //    a.Publisher.Contains(searchString) || a.PublicationYear.GetValueOrDefault().Equals(searchString));
 
             return results;
         }
@@ -117,11 +114,40 @@ namespace LibraryManagementAPI.Services
                 }
             };
         }
+        /// <summary>
+        /// Locate book in Library by its ISBN number - static sample data
+        /// </summary>
+        /// <param name="isbn"></param>
+        /// <returns></returns>
+        public LibraryInventory LocateSampleBookByISBN(string isbn)
+
+        {
+            var result = (from a in library
+                          where (a.Books.Any(b => b.ISBN == isbn))
+                          select a).FirstOrDefault();
 
 
-        public Book GetBook(string id) =>  _repositoryContext.Books
+            return result;
+        }
+
+        /// <summary>
+        /// Get book details by ISBN number
+        /// </summary>
+        /// <param name="isbn"></param>
+        /// <returns></returns>
+        public Book GetBookByISBN(string isbn) => _repositoryContext.Books
                // .Include(b => b.)
-               .Where(b => b.ISBN == id)
+               .Where(b => b.ISBN == isbn)
+               .FirstOrDefault();
+
+        /// <summary>
+        /// Get book details by ISBN number
+        /// </summary>
+        /// <param name="isbn"></param>
+        /// <returns></returns>
+        public LibraryInventory LocateBookByISBN(string isbn) => _repositoryContext.Inventories
+                .Include(b => b.Books)
+               .Where(b => b.Books.Any(a => a.ISBN == isbn))
                .FirstOrDefault();
 
         public IEnumerable<Book> GetBooks()
@@ -129,6 +155,15 @@ namespace LibraryManagementAPI.Services
             return _repositoryContext.Books
                    .ToList();
         }
+
+
+        public bool CreateInventory(LibraryInventory objInventory)
+        {
+
+            return true;
+        }
+
+
     }
 }
 

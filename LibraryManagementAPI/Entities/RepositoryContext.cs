@@ -15,6 +15,7 @@ namespace LibraryManagementAPI.Entities
         public DbSet<Disc> Discs { get; set; }
         public DbSet<CD> CDs { get; set; }
         public DbSet<DVD> DVDs { get; set; }
+        public DbSet<LibraryInventory> Inventories { get; set; }
     }
 }
 

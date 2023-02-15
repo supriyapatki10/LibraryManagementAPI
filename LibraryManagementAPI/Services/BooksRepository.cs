@@ -76,13 +76,14 @@ namespace LibraryManagementAPI.Services
         {
             var searchMultipleStrings = searchString?.Split("&").ToList();
 
-            var searchResults = LibraryManagementAPI.SampleData.DataInitializer.lstBooksSample.All(A => searchMultipleStrings.Any(b => A.Authors.Contains(b) || A.Title.Contains(b)
-            || Convert.ToString(A.PublicationYear).Contains(searchString) || A.Publisher.Contains(b)));
+            //var searchResults = LibraryManagementAPI.SampleData.DataInitializer.lstBooksSample.All(A => searchMultipleStrings.Any(b => A.Authors.Contains(b) || A.Title.Contains(b)
+            //|| Convert.ToString(A.PublicationYear).Contains(searchString) || A.Publisher.Contains(b)));
 
             var results = (from book in lstBooksSample
-                           where searchMultipleStrings.Contains(book.Publisher) ||
-                           searchMultipleStrings.Contains(book.PublicationYear.ToString()) ||
-                           searchMultipleStrings.Contains(book.Title) //||
+                           from j in searchMultipleStrings 
+                           where book.Publisher.Contains(j) ||
+                           book.PublicationYear.ToString().Contains(j) ||
+                           book.Title.Contains(j) //||
                            //book.Authors.Any(a=>a == searchMultipleStrings)
                            select book).ToList();
 
@@ -114,17 +115,45 @@ namespace LibraryManagementAPI.Services
                 }
             };
         }
+
+
+        ///// <summary>
+        ///// Locate book in Library by its ISBN number - static sample data
+        ///// </summary>
+        ///// <param name="isbn"></param>
+        ///// <returns></returns>
+        //public LibraryInventory LocateSampleBookByISBN(string isbn)
+
+        //{
+        //    var result = (from a in library
+        //                  where (a.Items.Any(b => b.ISBN == isbn))
+        //                  select a).FirstOrDefault();
+
+
+        //    return result;
+        //}
+
+
         /// <summary>
         /// Locate book in Library by its ISBN number - static sample data
         /// </summary>
         /// <param name="isbn"></param>
         /// <returns></returns>
-        public LibraryInventory LocateSampleBookByISBN(string isbn)
+        public object LocateSampleItemByISBN(string isbn)
 
         {
             var result = (from a in library
-                          where (a.Books.Any(b => b.ISBN == isbn))
-                          select a).FirstOrDefault();
+                          where a.Item.ISBN == isbn
+                          // group a by a.Item.ISBN into G
+                          group a by new { a.Item.ISBN } into G
+
+                          select new
+                          {
+                              ISBN = G.Key.ISBN,
+                              //   BookShelfNumber = G.Key.BookShelf,
+                              totalItems = G.Count()
+
+                          });
 
 
             return result;
@@ -146,8 +175,7 @@ namespace LibraryManagementAPI.Services
         /// <param name="isbn"></param>
         /// <returns></returns>
         public LibraryInventory LocateBookByISBN(string isbn) => _repositoryContext.Inventories
-                .Include(b => b.Books)
-               .Where(b => b.Books.Any(a => a.ISBN == isbn))
+            .Where(b => b.Item.ISBN == isbn)
                .FirstOrDefault();
 
         public IEnumerable<Book> GetBooks()

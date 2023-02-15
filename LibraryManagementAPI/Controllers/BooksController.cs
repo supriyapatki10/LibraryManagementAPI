@@ -58,9 +58,9 @@ namespace LibraryManagementAPI.Controllers
 
 
         [HttpGet(Name = "LocateSampleBookByISBN")]
-        public LibraryInventory LocateSampleBookByISBN(string isbn)
+        public object LocateSampleBookByISBN(string isbn)
         {
-            return _booksRepository.LocateSampleBookByISBN(isbn);
+            return _booksRepository.LocateSampleItemByISBN(isbn);
         }
 
         

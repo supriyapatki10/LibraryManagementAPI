@@ -56,22 +56,71 @@ namespace LibraryManagementAPI.SampleData
 
             };
 
+        //public static List<LibraryInventory> library = new List<LibraryInventory>()
+        //{
+        //    new LibraryInventory
+        //    {
+        //        Books = lstBooksSample,
+        //        Room = 1,
+        //        Row= 1,
+        //        BookShelf = 1
+        //    },
+        //    new LibraryInventory
+        //    {
+        //        Books = lstSampleInventoryBooks,
+        //        Room = 1,
+        //        Row= 1,
+        //        BookShelf = 2
+        //    }
+
+        //};
+
         public static List<LibraryInventory> library = new List<LibraryInventory>()
         {
             new LibraryInventory
             {
-                Books = lstBooksSample,
+                Item = new Item
+                {
+                    ISBN = "1234",
+                    Title = "Title-1"
+                },
                 Room = 1,
                 Row= 1,
                 BookShelf = 1
             },
-            new LibraryInventory
+           new LibraryInventory
             {
-                Books = lstSampleInventoryBooks,
+                Item = new Item
+                {
+                    ISBN = "1234",
+                    Title = "Title-1"
+                },
                 Room = 1,
                 Row= 1,
                 BookShelf = 2
-            }
+            },
+           new LibraryInventory
+            {
+                Item = new Item
+                {
+                    ISBN = "5678",
+                    Title = "Title1-2"
+                },
+                Room = 2,
+                Row= 1,
+                BookShelf = 3
+            },
+           new LibraryInventory
+            {
+                Item = new Item
+                {
+                    ISBN = "1011",
+                    Title = "Title-3"
+                },
+                Room = 2,
+                Row= 2,
+                BookShelf = 4
+            },
 
         };
 
